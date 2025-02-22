@@ -4,7 +4,7 @@ const { fetchAllProducts, postProduct ,fetchProductByCode } = require('../contro
 const router = express.Router();
 
 router.get('/productos', fetchAllProducts);
-router.get('/producto/:codigo', fetchProductByCode);
+router.get('/producto', fetchProductByCode);
 router.post('/producto', postProduct);
 
 module.exports = router;

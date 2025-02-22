@@ -25,6 +25,7 @@ const fetchProductByCode = async (req, res) => {
 
 
 const postProduct = async (req, res) => {
+    console.log(req.body)
     const { codigo, nombre, categoria, stock, precio } = req.body;
     try {
         const insertId = await addProduct(codigo, nombre, categoria, stock, precio);
