@@ -1,7 +1,8 @@
 // controllers/productosController.js
-const { getAllProducts, addProduct ,getProductByCode } = require('../models/productoModel');
+const { getAllProducts, addProduct ,getProductByCode } = require('../models/Product');
 
 const fetchAllProducts = async (req, res) => {
+    console.log('Fetching all products..');
     try {
         const productos = await getAllProducts();
         res.json(productos);
