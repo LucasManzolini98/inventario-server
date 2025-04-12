@@ -4,17 +4,18 @@ const bcrypt = require("bcryptjs");
 // Obtener usuario por email
 const getUserByEmail = async (email) => {
     const [rows] = await pool.query("SELECT * FROM users WHERE email = ?", [email]);
-    return rows[0]; // Retorna el usuario encontrado o `undefined`
+    console.log(rows);
+    return rows[0];
 };
 
 // Crear un nuevo usuario
 const addUser = async (email, password, role = "empleado") => {
-    const hashedPassword = await bcrypt.hash(password, 10); // Hashea la contraseña antes de guardarla
+    const hashedPassword = await bcrypt.hash(password, 10);
     const [result] = await pool.query(
         "INSERT INTO users (email, password, role) VALUES (?, ?, ?)",
         [email, hashedPassword, role]
     );
-    return result.insertId; // Retorna el ID del usuario creado
+    return result.insertId;
 };
 
 // Verificar contraseña

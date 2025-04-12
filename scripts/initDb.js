@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 
 const createAdminUser = async () => {
     const email = "admin@email.com";
-    const password = "admin"; // Cambiá esto por una contraseña segura
+    const password = "admin";
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {

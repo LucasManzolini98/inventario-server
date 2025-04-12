@@ -5,7 +5,7 @@ const secretKey = process.env.SECRET_KEY;
 
 const login = async (req, res) => {
   const { email, password } = req.body;
-  console.log("trying to login...")
+  console.log("trying to login..." + email + "..." + password);
   try {
     const user = await User.getUserByEmail(email);
     if (!user) return res.status(400).json({ msg: "Usuario no encontrado" });
@@ -16,7 +16,7 @@ const login = async (req, res) => {
     const token = jwt.sign(
       { id: user.id, role: user.role },
       secretKey,
-      { expiresIn: "10s" }
+      { expiresIn: "20m" }
     );
     console.log("-----token generado-----");
     res.json({ token, role: user.role });
@@ -35,7 +35,7 @@ const register = async (req, res) => {
     if (existingUser)
       return res.status(400).json({ msg: "El usuario ya existe" });
 
-    // Crear usuario en MySQL
+    // Crear usuario 
     const userId = await User.addUser(email, password, role);
     res.status(201).json({ msg: "Usuario creado", userId });
   } catch (error) {
@@ -49,7 +49,7 @@ const validateToken = (req, res) => {
     console.log("validando token.....")
     //No token
     if (!header) {
-        return res.status(403).json({ error: "No Token" }); 
+        return res.status(400).json({ error: "No Token" }); 
     }
 
     const bearer = header.split(" ");
@@ -65,9 +65,31 @@ const validateToken = (req, res) => {
     }
 };
 
+const loginWithToken= async (req, res) => {
+
+  console.log("trying to login only with token...")
+  const header = req.headers["authorization"];
+
+    //No token
+    if (!header) {
+        return res.status(400).json({ error: "No Token" }); 
+    }
+
+    const bearer = header.split(" ");
+    const token = bearer[1];
+
+    try {
+        const decoded = jwt.verify(token, secretKey);
+        req.user = decoded; 
+        res.status(200).json({ credentials: decoded})
+    } catch (err) {
+        return res.status(403).json({ error: "Token inválido o expirado" });
+    }
+};
 
 
 
 
 
-module.exports = { login, register, validateToken };
+
+module.exports = { login, register, validateToken, loginWithToken };

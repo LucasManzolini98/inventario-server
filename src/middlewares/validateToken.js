@@ -15,10 +15,11 @@ const validateToken = (req, res, next) => {
     try {
         const decoded = jwt.verify(token, secretKey);
         //Ok
-        req.user = decoded; // Guarda los datos decodificados en `req.user`
-        next(); // Llama a la siguiente función del middleware (ejecuta la ruta)
+        req.user = decoded; 
+        next();
     } catch (err) {
-        return res.status(403).json({ error: "Token inválido o expirado" });  // Si el token es inválido o expirado, retorna 403
+        console.log("token invalido" +token)
+        return res.status(403).json({ error: "Token inválido o expirado" });
     }
 };
 

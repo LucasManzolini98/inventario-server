@@ -2,7 +2,7 @@ const express = require('express');
 require("dotenv").config();
 const cors = require('cors');
 const validateToken = require('./src/middlewares/validateToken');
-// Importar rutas
+
 const productosRoutes = require('./src/routes/productosRoutes');
 const authRoutes = require('./src/routes/authRoutes'); // Agregar rutas de autenticación
 
@@ -11,12 +11,13 @@ const port = process.env.PORT || 3001;
 
 // Configuración de CORS
 app.use(cors({
-    origin: '*',
+    origin: 'http://192.168.0.11:3000', 
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true // Necesario para enviar credenciales
 }));
 app.use((req, res, next) => {
-    res.setHeader("Content-Security-Policy", "default-src *; connect-src *;");
+    res.setHeader("Referrer-Policy","Content-Security-Policy", "default-src *; connect-src *;", "no-referrer-when-downgrade");
     next();
 });
 
@@ -26,7 +27,7 @@ app.use('/api',validateToken);
 
 // Routes
 app.use('/api', productosRoutes);
-app.use('/auth', authRoutes); // Ahora /api/login y /api/register están activas
+app.use('/auth', authRoutes);
 
 // Iniciar servidor
 app.listen(port,"0.0.0.0", () => {

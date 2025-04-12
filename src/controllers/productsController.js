@@ -1,8 +1,8 @@
-// controllers/productosController.js
-const { getAllProducts, addProduct ,getProductByCode } = require('../models/Product');
+const { getAllProducts, addProductIfNotExists, getProductByCode,deleteProduct } = require('../models/Product');
 
 const fetchAllProducts = async (req, res) => {
     console.log('Fetching all products..');
+    console.log(new Date().toLocaleTimeString());
     try {
         const productos = await getAllProducts();
         res.json(productos);
@@ -24,16 +24,39 @@ const fetchProductByCode = async (req, res) => {
     }
 };
 
-
 const postProduct = async (req, res) => {
-    console.log(req.body)
+    console.log(req.body);
     const { codigo, nombre, categoria, stock, precio } = req.body;
+
     try {
-        const insertId = await addProduct(codigo, nombre, categoria, stock, precio);
+        const insertId = await addProductIfNotExists(codigo, nombre, categoria, stock, precio);
         res.status(201).json({ message: 'Producto agregado', insertId });
     } catch (error) {
-        res.status(500).json({ error: 'Error al insertar producto', details: error.message });
+        console.log("codigo existenteeee")
+        res.status(400).json({ error: error.message });
     }
 };
 
-module.exports = { fetchAllProducts, postProduct ,fetchProductByCode };
+const deleteProductByCode = async (req, res) => {
+    const { codigo } = req.params;
+    console.log("----------------------------");
+    console.log(new Date().toLocaleTimeString());
+    console.log("Intentando borrar producto con codigo: " + codigo);
+    
+    try {
+        const wasDeleted = await deleteProduct(codigo);
+        if (!wasDeleted) {
+            console.log("error con el codigo:"+ codigo)
+            return res.status(405).json({ error: `Producto con código ${codigo} no encontrado` });
+        }
+        console.log("Borrado con éxito, devolviendo respuesta...")
+        console.log("----------------------------");
+        res.status(204).send(); // No devuelve contenido
+    } catch (error) {
+        console.error('Error al eliminar producto:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};
+
+
+module.exports = { fetchAllProducts, postProduct, fetchProductByCode, deleteProductByCode };
