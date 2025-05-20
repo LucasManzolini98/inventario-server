@@ -10,7 +10,7 @@ const getProductByCode = async (codigo) => {
     return rows[0];
 };
 
-const addProductIfNotExists = async (codigo, nombre, categoria, stock, precio) => {
+const addProductIfNotExists = async (codigo, nombre, categoria_id, stock, precio) => {
     const [existingProduct] = await pool.query('SELECT id FROM productos WHERE codigo = ?', [codigo]);
 
     if (existingProduct.length > 0) {
@@ -19,8 +19,8 @@ const addProductIfNotExists = async (codigo, nombre, categoria, stock, precio) =
     }
 
     const [result] = await pool.query(
-        'INSERT INTO productos (codigo, nombre, categoria, stock, precio) VALUES (?, ?, ?, ?, ?)',
-        [codigo, nombre, categoria, stock, precio]
+        'INSERT INTO productos (codigo, nombre, categoria_id, stock, precio) VALUES (?, ?, ?, ?, ?)',
+        [codigo, nombre, categoria_id, stock, precio]
     );
     return result.insertId;
 };

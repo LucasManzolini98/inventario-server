@@ -1,4 +1,4 @@
-const { getAllProducts, addProductIfNotExists, getProductByCode,deleteProduct } = require('../models/Product');
+const { getAllProducts, addProductIfNotExists, getProductByCode, deleteProduct } = require('../models/Product');
 
 const fetchAllProducts = async (req, res) => {
     console.log('Fetching all products..');
@@ -26,10 +26,10 @@ const fetchProductByCode = async (req, res) => {
 
 const postProduct = async (req, res) => {
     console.log(req.body);
-    const { codigo, nombre, categoria, stock, precio } = req.body;
+    const { codigo, nombre, categoria_id, stock, precio } = req.body;
 
     try {
-        const insertId = await addProductIfNotExists(codigo, nombre, categoria, stock, precio);
+        const insertId = await addProductIfNotExists(codigo, nombre, categoria_id, stock, precio);
         res.status(201).json({ message: 'Producto agregado', insertId });
     } catch (error) {
         console.log("codigo existenteeee")
@@ -47,7 +47,7 @@ const deleteProductByCode = async (req, res) => {
         const wasDeleted = await deleteProduct(codigo);
         if (!wasDeleted) {
             console.log("error con el codigo:"+ codigo)
-            return res.status(405).json({ error: `Producto con código ${codigo} no encontrado` });
+            return res.status(404).json({ error: `Producto con código ${codigo} no encontrado` });
         }
         console.log("Borrado con éxito, devolviendo respuesta...")
         console.log("----------------------------");
