@@ -9,11 +9,11 @@ const getUserByEmail = async (email) => {
 };
 
 // Crear un nuevo usuario
-const addUser = async (email, password, role = "empleado") => {
+const addUser = async (email, password, rol = "empleado") => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const [result] = await pool.query(
         "INSERT INTO usuarios (email, password, rol) VALUES (?, ?, ?)",
-        [email, hashedPassword, role]
+        [email, hashedPassword, rol]
     );
     return result.insertId;
 };

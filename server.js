@@ -6,7 +6,7 @@ const validateToken = require('./src/middlewares/validateToken');
 const productosRoutes = require('./src/routes/productosRoutes');
 const authRoutes = require('./src/routes/authRoutes'); // Agregar rutas de autenticación
 const categoriasRoutes = require('./src/routes/categoriesRoutes')
-
+const ventasRoutes = require('./src/routes/salesRoutes')
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -26,8 +26,10 @@ app.use((req, res, next) => {
 // Middlewares
 app.use(express.json());
 app.use('/api',validateToken);
-app.use('/api',categoriasRoutes)
+
 // Routes
+app.use('/api',categoriasRoutes)
+app.use('/api',ventasRoutes)
 app.use('/api', productosRoutes);
 app.use('/auth', authRoutes);
 
